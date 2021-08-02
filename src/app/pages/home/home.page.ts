@@ -32,6 +32,10 @@ export class HomePage implements OnInit {
     );
   }
 
+  onChange(event){
+    console.log(event);
+  }
+
   loadMovies(event){
     localStorage.setItem('currentPage', '2');
     const page = this.movieService.pageGet;
