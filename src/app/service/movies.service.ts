@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class MoviesService {
-  basedUrl = 'https://api.themoviedb.org/3/movie/popular';
+  private basedUrl = 'https://api.themoviedb.org/3';
   private apiKey = environment.apiKey;
   private page = 1;
   constructor(
@@ -28,8 +28,8 @@ export class MoviesService {
   getMovies(page: number): Observable<any>{
     if(page > this.page){
       this.page = page;
-      return this.http.get(`${this.basedUrl}/?page=${page}&&api_key=${this.apiKey}`);
+      return this.http.get(`${this.basedUrl}/movie/popular?page=${page}&&api_key=${this.apiKey}`);
     }
-    return this.http.get(`${this.basedUrl}/?page=${page}&&api_key=${this.apiKey}`);
+    return this.http.get(`${this.basedUrl}/movie/popular?page=${page}&&api_key=${this.apiKey}`);
   }
 }
