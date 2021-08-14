@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/movies"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ movie?.title }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-grid class="ion-no-padding" *ngIf="movie">
+  <ion-row>
+    <ion-col sizeLg="6" offsetLg="3">
+      <ion-img src="https://image.tmdb.org/t/p/w500{{movie.poster_path}}"></ion-img>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col sizeLg="6" offsetLg="3">
+      <h4 class="ion-text-center">{{ movie.title }}</h4>
+      <div class="container">
+        <p>{{ movie.overview }}...</p>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col sizeLg="6" offsetLg="3">
+      <ion-list>
+        <ion-item>Budjet: {{ movie.budget | currency }}</ion-item>
+        <ion-item>Revenue: {{ movie.revenue| currency }}</ion-item>
+        <ion-item>Runtime: &nbsp; <ion-badge>{{ movie.runtime }}</ion-badge> &nbsp; minutes</ion-item>
+        <ion-item>Popularity: {{ movie.popularity }}</ion-item>
+        <ion-item>Release Date: {{ movie.release_date | date}}</ion-item>
+        <ion-item>Rating: &nbsp; <ion-badge>{{ movie.vote_average }}</ion-badge></ion-item>
+        <ion-item>Vote: {{ movie.vote_count }}</ion-item>
+      </ion-list>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col sizeLg="6" offsetLg="3">
+      <ion-list>
+        <ion-list-header *ngIf="movie.production_companies.length > 1">Producttion Companies</ion-list-header>
+        <ion-list-header *ngIf="movie.production_companies.length <= 1">Producttion Company</ion-list-header>
+        <ion-item *ngFor="let company of movie.production_companies">
+          <ion-avatar slot="start"><ion-img src="https://image.tmdb.org/t/p/w500{{company.logo_path}}"></ion-img></ion-avatar>
+          <ion-label>{{ company.name }}</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+  </ion-row>
+</ion-grid>

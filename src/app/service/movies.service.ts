@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from './../../environments/environment';
 import { Observable } from 'rxjs';
+import { MovieDetails } from './../models/movie';
 
 @Injectable({
   providedIn: 'root'
@@ -31,5 +32,9 @@ export class MoviesService {
       return this.http.get(`${this.basedUrl}/movie/popular?page=${page}&&api_key=${this.apiKey}`);
     }
     return this.http.get(`${this.basedUrl}/movie/popular?page=${page}&&api_key=${this.apiKey}`);
+  }
+
+  getMovie(movieId: number): Observable<MovieDetails>{
+    return this.http.get<MovieDetails>(`${this.basedUrl}/movie/${movieId}?api_key=${this.apiKey}`);
   }
 }

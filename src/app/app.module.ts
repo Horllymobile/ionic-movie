@@ -1,3 +1,4 @@
+import { MoviePage } from './pages/movie/movie.page';
 import { HomePageModule } from './pages/home/home.module';
 import { HomePage } from './pages/home/home.page';
 import { HeaderComponent } from './components/header/header.component';
@@ -12,10 +13,12 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
+import { ComponentsModule } from './components/components.module';
+
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
+    MoviePage
   ],
   entryComponents: [
   ],
@@ -24,7 +27,8 @@ import { AppRoutingModule } from './app-routing.module';
     IonicModule.forRoot(),
     AppRoutingModule,
     HomePageModule,
-    HttpClientModule
+    HttpClientModule,
+    ComponentsModule
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],

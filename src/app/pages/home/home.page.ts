@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/naming-convention */
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonInfiniteScroll } from '@ionic/angular';
 import { Observable } from 'rxjs';
@@ -16,6 +17,7 @@ export class HomePage implements OnInit {
   @ViewChild(IonInfiniteScroll) infinitScroll: IonInfiniteScroll;
 
   movies: data;
+  errorMessage: string;
   tmdbImage = 'https://image.tmdb.org/t/p';
   constructor(
     private movieService: MoviesService
@@ -26,8 +28,8 @@ export class HomePage implements OnInit {
       (res: data) => {
         this.movies = res;
       },
-      err => {
-        console.log(err);
+      (err: HttpErrorResponse) => {
+        this.errorMessage = 'Could\'nt fetch movies, check your internet settings';
       }
     );
   }
@@ -57,8 +59,8 @@ export class HomePage implements OnInit {
         this.movieService.pageSet = res.page;
         setTimeout(() => event.target?.complete(), 500);
       },
-      err => {
-        console.log(err);
+      (err: HttpErrorResponse) => {
+        this.errorMessage = 'Could\'nt fetch movies, check your internet settings';
       }
     );
   }
