@@ -3,12 +3,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { MovieCardComponent } from './movie-card/movie-card.component';
+import { SearchBarComponent } from './search-bar/search-bar.component';
 
 
 @NgModule({
   declarations: [
     HeaderComponent,
-    MovieCardComponent
+    MovieCardComponent,
+    SearchBarComponent
   ],
   imports: [
     CommonModule,
@@ -16,7 +18,8 @@ import { MovieCardComponent } from './movie-card/movie-card.component';
   ],
   exports: [
     HeaderComponent,
-    MovieCardComponent
+    MovieCardComponent,
+    SearchBarComponent
   ]
 })
 export class ComponentsModule { }

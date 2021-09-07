@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-export interface movie {
+export interface Movie {
   adult: boolean;
   backdrop_path: string;
   genre_ids: Array<number>;

@@ -2,6 +2,7 @@ import { MoviePage } from './pages/movie/movie.page';
 import { HomePage } from './pages/home/home.page';
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { MovieResolver } from './service/movie.resolver';
 
 const routes: Routes = [
   { path: '', redirectTo: 'movies', pathMatch: 'full' },
@@ -11,7 +12,10 @@ const routes: Routes = [
   },
   {
     path: 'movie-details/:movieId',
-    component: MoviePage
+    component: MoviePage,
+    resolve: {
+      movie: MovieResolver
+    }
   }
   // {
   //   path: 'movie',
