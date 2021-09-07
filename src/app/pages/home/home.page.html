@@ -11,12 +11,12 @@
   <ion-grid>
     <ion-row>
       <ion-col size-md="6" offset-md="3">
-        <app-search-bar ></app-search-bar>
+        <app-search-bar (searchKey)="searchMovie($event)"></app-search-bar>
       </ion-col>
     </ion-row>
   </ion-grid>
 
-  <div class="mt-1" *ngIf="movies$ | async as movies">
+  <div class="mt-1" *ngIf="original$ | async as movies">
     <ion-grid>
       <ion-row>
         <ion-col size-lg="4" size-md="12" size-xs="12" size-sm="12" *ngFor="let movie of movies.results">

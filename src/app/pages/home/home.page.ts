@@ -3,9 +3,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonInfiniteScroll, LoadingController } from '@ionic/angular';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { data } from 'src/app/models/data';
+import { MovieDetails } from 'src/app/models/movie';
 
 import { MoviesService } from './../../service/movies.service';
 
@@ -16,7 +17,7 @@ import { MoviesService } from './../../service/movies.service';
 })
 export class HomePage implements OnInit {
   @ViewChild(IonInfiniteScroll) infinitScroll: IonInfiniteScroll;
-
+  original$: Observable<data>;
   movies$: Observable<data>;
   errorMessage: string;
   tmdbImage = 'https://image.tmdb.org/t/p';
@@ -43,13 +44,28 @@ export class HomePage implements OnInit {
             return err;
           })
         )
+        this.original$ = this.movies$;
         await loader.dismiss()
       },1000)
     }, 500)
   }
 
-  onChange(event){
-    console.log(event);
+  searchMovie(event:string){
+    console.log(event)
+    if(!event){
+      this.original$ = this.movies$;
+    };
+    this.original$ = this.original$.pipe(
+      map((values): data => {
+        return {
+          page: values.page,
+          results: values.results.filter(movies => 
+            movies.title.toLocaleLowerCase().includes(event.toLocaleLowerCase())),
+          total_pages: values.total_pages,
+          total_results: values.total_results
+        }
+      })
+    )
   }
 
   loadMovies(event){
@@ -59,6 +75,7 @@ export class HomePage implements OnInit {
       this.movies$ = this.movieService.getMovies(page+1).pipe(
         map(res => res)
       );
+      this.original$ = this.movies$;
     },2000)
   }
 
