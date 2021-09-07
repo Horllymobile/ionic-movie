@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Observable } from 'rxjs';
-import { movie } from 'src/app/models/movie';
+import { Movie } from 'src/app/models/movie';
 
 @Component({
   selector: 'app-movie-card',
@@ -9,7 +9,7 @@ import { movie } from 'src/app/models/movie';
 })
 export class MovieCardComponent implements OnInit {
 
-  @Input() movie: movie;
+  @Input() movie: Movie;
 
   constructor() { }
 
