@@ -2,9 +2,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonInfiniteScroll } from '@ionic/angular';
-import { Observable } from 'rxjs';
+import { IonInfiniteScroll, LoadingController } from '@ionic/angular';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { data } from 'src/app/models/data';
+import { MovieDetails } from 'src/app/models/movie';
 
 import { MoviesService } from './../../service/movies.service';
 
@@ -15,54 +17,66 @@ import { MoviesService } from './../../service/movies.service';
 })
 export class HomePage implements OnInit {
   @ViewChild(IonInfiniteScroll) infinitScroll: IonInfiniteScroll;
-
-  movies: data;
+  original$: Observable<data>;
+  movies$: Observable<data>;
   errorMessage: string;
   tmdbImage = 'https://image.tmdb.org/t/p';
   constructor(
-    private movieService: MoviesService
+    private movieService: MoviesService,
+    private loadingCtrl: LoadingController
   ) { }
-  ngOnInit() {
-    this.movieService.getMovies(1)
-    .subscribe(
-      (res: data) => {
-        this.movies = res;
-      },
-      (err: HttpErrorResponse) => {
-        this.errorMessage = 'Could\'nt fetch movies, check your internet settings';
-      }
-    );
+  async ngOnInit() {
+
+    const loader = await this.loadingCtrl.create({
+       animated: true,
+      spinner: 'circles',
+      translucent: true,
+      duration: 5000,
+      cssClass: 'loader',
+    });
+    await loader.present()
+    setTimeout(async () => {
+      setTimeout(async()=>{
+        this.movies$ = this.movieService.getMovies(1).pipe(
+          map(res => res),
+          catchError((err) => {
+            this.errorMessage = 'Could\'nt fetch movies$, check your internet settings';
+            return err;
+          })
+        )
+        this.original$ = this.movies$;
+        await loader.dismiss()
+      },1000)
+    }, 500)
   }
 
-  onChange(event){
-    console.log(event);
+  searchMovie(event:string){
+    console.log(event)
+    if(!event){
+      this.original$ = this.movies$;
+    };
+    this.original$ = this.original$.pipe(
+      map((values): data => {
+        return {
+          page: values.page,
+          results: values.results.filter(movies => 
+            movies.title.toLocaleLowerCase().includes(event.toLocaleLowerCase())),
+          total_pages: values.total_pages,
+          total_results: values.total_results
+        }
+      })
+    )
   }
 
   loadMovies(event){
     localStorage.setItem('currentPage', '2');
     const page = this.movieService.pageGet;
-    if(this.movies.results.length === 1000) {
-      this.toggleInfinitScroll();
-      return;
-    }
-    this.movieService.getMovies(page+1)
-    .subscribe(
-      (res: data) => {
-        console.log(res);
-        const newMovie: data = {
-          page: res.page,
-          results: [...this.movies.results, ...res.results],
-          total_pages: res.total_pages,
-          total_results: res.total_results
-        };
-        this.movies = newMovie;
-        this.movieService.pageSet = res.page;
-        setTimeout(() => event.target?.complete(), 500);
-      },
-      (err: HttpErrorResponse) => {
-        this.errorMessage = 'Could\'nt fetch movies, check your internet settings';
-      }
-    );
+    setTimeout(() => {
+      this.movies$ = this.movieService.getMovies(page+1).pipe(
+        map(res => res)
+      );
+      this.original$ = this.movies$;
+    },2000)
   }
 
   toggleInfinitScroll(){
